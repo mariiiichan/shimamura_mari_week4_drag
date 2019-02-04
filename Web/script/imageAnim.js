@@ -7,6 +7,8 @@
 		puzzleBoard = document.querySelector(".puzzle-board"),
 		puzzleSelectors = document.querySelectorAll("#buttonHolder img");
 
+	let dropZones = document.querySelectorAll('.drop-zone');
+
 		// functions go in the middle
 		function createPuzzlePieces(pictureIndex) {
 			// generate puzzle pieces for the left hand side
@@ -16,8 +18,40 @@
 
 				piecesBoard.innerHTML += newPuzzlePiece;
 				});
-			
+			puzzleBoard.style.backgroundImage = `url(./images/backGround${pictureIndex}.jpg)`;
+
+			initDrag();
 		}
+		
+		// drag and drop functionality goes here
+		function initDrag() {
+			piecesBoard.querySelectorAll('img').forEach(img => {
+				img.addEventListener("dragstart", function(e) {
+					//e.preventDefault();
+					console.log('dragging...');
+
+					e.dataTransfer.setData("text/plain", this.id)
+				});
+			});
+		}
+
+		// handle dragover and drop 
+		dropZones.forEach(zone => {
+			zone.addEventListener("dragover", function(e) {
+				e.preventDefault();
+				console.log("you dragged me over!");
+			});
+
+			zone.addEventListener("drop", function(e) { 
+				e.preventDefault();
+				console.log("you dropped sumpin on me");
+
+				let piece = e.dataTransfer.getData("text/plain");
+				e.target.appendChild(document.querySelector( `#${piece}` ));
+			});
+		});
+
+
 
 		function resetPuzzlePieces() {
 			// empty the thumbnail container 
